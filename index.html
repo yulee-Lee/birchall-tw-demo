@@ -29,7 +29,7 @@
   --ink-soft:#4c463d;
   --muted:#8a8172;
   --hairline:#e9e2d4;     /* 髮絲線 */
-  --stage-bg:#f3eee4;     /* 分鏡視窗底色 */
+  --stage-bg:#FDFBF7;     /* 分鏡視窗底色:與主底色同鎖,欄位分界由髮絲線承擔 */
   --ghost:#ece5d6;        /* 幽靈組件 */
   --red:#A22338;          /* 原廠經典識別紅 PANTONE 7420 C（僅限局部點綴，嚴禁平鋪） */
   --gold:#C5A059;         /* 高奢內斂淡金（金句與圖說細線指定色） */
@@ -148,9 +148,9 @@ img{ max-width:100%; display:block; }
   color:var(--ink);
   background:var(--paper);
   padding:10px 18px 9px;
+  border-left:2px solid var(--gold);
   opacity:0; transition:opacity .9s ease .4s;
 }
-.stage .caption{ border-left:2px solid var(--gold); }
 .stage .caption .src{ display:block; font-size:10px; letter-spacing:.3em; color:var(--gold); }
 .stage .caption.on{ opacity:1; }
 
@@ -189,6 +189,13 @@ img{ max-width:100%; display:block; }
   font-size:52px; line-height:.4; font-weight:400;
   color:var(--gold);
   margin-bottom:26px;
+}
+.text-col .quote::after{
+  content:"”";
+  display:block; text-align:right;
+  font-size:52px; line-height:.4; font-weight:400;
+  color:var(--gold);
+  margin-top:30px;
 }
 /* 行動版分鏡（上圖下文區塊式）：桌機隱藏 */
 .m-figure{ display:none; }
