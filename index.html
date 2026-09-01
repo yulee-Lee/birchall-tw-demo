@@ -111,7 +111,8 @@ img{ max-width:100%; display:block; }
 /* 開場字卡：節點 A 之前的靜默狀態，供「淡入」有跡可循 */
 .stage .plate{
   position:absolute; inset:0;
-  display:flex; flex-direction:column; justify-content:center; align-items:center;
+  display:flex; flex-direction:column; justify-content:flex-start; align-items:center;
+  padding-top:clamp(110px,22vh,240px);
   gap:26px;
   opacity:1; transition:opacity var(--fade) ease;
 }
