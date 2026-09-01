@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>01. 傲骨世家 The Heritage — GB BIRCHALL TAIWAN 前端技術驗證</title>
+<meta name="description" content="GB Birchall Taiwan 官方網站【01. 傲骨世家】內頁雙欄矩陣：sticky 分鏡視窗、滾動節點 crossfade、跨章節關係型調用之前端技術驗證。">
+
+<!-- 分鏡影像預載：三張分鏡於文件解析階段即開始下載，杜絕淡入露白屏 -->
+<link rel="preload" as="image" href="img/fig1-captain-uniform-1200.webp" type="image/webp">
+<link rel="preload" as="image" href="img/fig3-captain-elder-1200.webp" type="image/webp">
+<link rel="preload" as="image" href="img/fig4-shipping-cases-1200.webp" type="image/webp">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Noto+Serif+TC:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   GB BIRCHALL TAIWAN — 01. The Heritage
+   內頁雙欄矩陣 前端技術驗證
+   左欄：100vh sticky 分鏡視窗（雙圖層 1.5s crossfade）
+   右欄：定稿正文 + 「英國製造」潛伏幽靈組件
+   ============================================================ */
+:root{
+  --paper:#f4f1ea;        /* 象牙紙色底 */
+  --ink:#211d18;          /* 墨色 */
+  --ink-soft:#4c463d;
+  --muted:#8a8172;
+  --hairline:#ddd6c8;     /* 髮絲線 */
+  --stage-bg:#eae6db;     /* 分鏡視窗底色 */
+  --ghost:#e7e2d5;        /* 幽靈組件 */
+  --serif-tc:"Noto Serif TC","PMingLiU",serif;
+  --serif-en:"Cormorant Garamond","Times New Roman",serif;
+  --fade:1.5s;            /* 分鏡遞補時間（規格指定） */
+}
+*{ box-sizing:border-box; margin:0; padding:0; }
+html{ scroll-behavior:auto; }
+body{
+  background:var(--paper);
+  color:var(--ink);
+  font-family:var(--serif-tc);
+  font-weight:400;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+img{ max-width:100%; display:block; }
+::selection{ background:var(--ink); color:var(--paper); }
+
+/* ---------- 頁首 masthead ---------- */
+.masthead{
+  padding:clamp(28px,4vw,52px) clamp(24px,5vw,72px) 0;
+  display:flex; justify-content:space-between; align-items:baseline;
+  border-bottom:0;
+}
+.masthead .brand{
+  font-family:var(--serif-en);
+  font-size:clamp(15px,1.3vw,19px);
+  letter-spacing:.42em; text-indent:.42em;
+  font-weight:500;
+}
+.masthead .brand small{ display:block; font-family:var(--serif-tc); font-size:11px; letter-spacing:.55em; color:var(--muted); margin-top:8px; font-weight:300; }
+.masthead .chapter-no{
+  font-family:var(--serif-en); font-style:italic;
+  font-size:clamp(13px,1.1vw,15px); letter-spacing:.18em; color:var(--muted);
+}
+
+/* ---------- 章名 ---------- */
+.chapter-head{
+  padding:clamp(56px,9vh,120px) clamp(24px,5vw,72px) clamp(48px,8vh,104px);
+  max-width:1680px; margin:0 auto;
+}
+.chapter-head .kicker{
+  font-family:var(--serif-en); font-size:12px; letter-spacing:.5em;
+  color:var(--muted); text-transform:uppercase; margin-bottom:26px;
+}
+.chapter-head h1{
+  font-size:clamp(34px,4.6vw,64px); font-weight:500;
+  letter-spacing:.22em; line-height:1.35;
+}
+.chapter-head h1 .en{
+  display:block; font-family:var(--serif-en); font-style:italic; font-weight:400;
+  font-size:clamp(18px,2vw,26px); letter-spacing:.14em; color:var(--ink-soft); margin-top:18px;
+}
+.chapter-head .rule{ width:64px; height:1px; background:var(--ink); margin-top:44px; }
+
+/* ---------- 雙欄矩陣 ---------- */
+.matrix{
+  display:grid; grid-template-columns:1fr 1fr;
+  max-width:1680px; margin:0 auto;
+  border-top:1px solid var(--hairline);
+}
+
+/* 左欄：sticky 分鏡視窗 */
+.stage-col{ position:relative; }
+.stage{
+  position:sticky; top:0; height:100vh; height:100svh;
+  overflow:hidden; background:var(--stage-bg);
+}
+.stage .layer{
+  position:absolute; inset:0;
+  opacity:0;
+  transition:opacity var(--fade) ease;
+  will-change:opacity;            /* 僅動 opacity，GPU 合成層，滾動不掉幀 */
+}
+.stage .layer.is-active{ opacity:1; }
+.stage .layer img{
+  width:100%; height:100%; object-fit:cover; object-position:center 22%;
+}
+/* 開場字卡：節點 A 之前的靜默狀態，供「淡入」有跡可循 */
+.stage .plate{
+  position:absolute; inset:0;
+  display:flex; flex-direction:column; justify-content:center; align-items:center;
+  gap:26px;
+  opacity:1; transition:opacity var(--fade) ease;
+}
+.stage .plate .no{
+  font-family:var(--serif-en); font-size:clamp(80px,9vw,150px);
+  font-weight:400; color:var(--ghost); letter-spacing:.05em;
+}
+.stage .plate .tt{ font-size:13px; letter-spacing:.6em; text-indent:.6em; color:var(--muted); font-weight:300; }
+.stage.storying .plate{ opacity:0; }
+/* 圖說：左下角，含跨章節調用標記 */
+.stage .caption{
+  position:absolute; left:clamp(20px,2.6vw,40px); bottom:clamp(20px,3vh,36px); z-index:5;
+  font-size:11px; letter-spacing:.24em; line-height:2;
+  color:var(--ink);
+  background:var(--paper);
+  padding:10px 18px 9px;
+  opacity:0; transition:opacity .9s ease .4s;
+}
+.stage .caption .src{ display:block; font-family:var(--serif-en); font-size:10px; letter-spacing:.3em; color:var(--muted); }
+.stage .caption.on{ opacity:1; }
+
+/* 右欄：正文 */
+.text-col{
+  padding:clamp(56px,10vh,140px) clamp(28px,6vw,104px) 0;
+  border-left:1px solid var(--hairline);
+}
+.text-col .lede{
+  font-size:clamp(20px,1.75vw,25px); font-weight:500;
+  letter-spacing:.1em; line-height:2.3;
+  margin-bottom:clamp(40px,6vh,72px);
+}
+.text-col p{
+  font-size:clamp(15.5px,1.15vw,17.5px); font-weight:300;
+  line-height:2.55; letter-spacing:.08em;
+  text-align:justify; color:var(--ink-soft);
+  margin-bottom:clamp(34px,4.5vh,52px);
+}
+.text-col p strong{ font-weight:500; color:var(--ink); }
+.text-col .quote{
+  font-family:var(--serif-en); font-style:italic; font-weight:400;
+  font-size:clamp(17px,1.4vw,21px); line-height:2.1; letter-spacing:.02em;
+  color:var(--ink); text-align:left;
+  border-left:1px solid var(--ink);
+  padding-left:28px; margin:clamp(44px,6vh,64px) 0;
+}
+/* 行動版分鏡（上圖下文區塊式）：桌機隱藏 */
+.m-figure{ display:none; }
+
+/* ---------- 「英國製造」潛伏幽靈組件 ----------
+   規格：右欄文字下方，精確對齊文字欄，低伏於紙面 */
+.ghost-make{
+  margin-top:clamp(64px,10vh,120px);
+  padding-bottom:clamp(72px,12vh,140px);
+  user-select:none;
+}
+.ghost-make .zh{
+  font-size:clamp(64px,7.2vw,118px); font-weight:600;
+  letter-spacing:.3em; line-height:1;
+  color:transparent;
+  -webkit-text-stroke:1px var(--ghost);
+  white-space:nowrap;
+}
+.ghost-make .en{
+  font-family:var(--serif-en); font-size:clamp(11px,1vw,13px);
+  letter-spacing:.58em; color:var(--ghost);
+  margin-top:22px; text-transform:uppercase;
+}
+
+/* ---------- 章節收尾 ---------- */
+.chapter-foot{
+  max-width:1680px; margin:0 auto;
+  border-top:1px solid var(--hairline);
+  padding:clamp(36px,6vh,64px) clamp(24px,5vw,72px) clamp(48px,8vh,88px);
+  display:flex; justify-content:space-between; align-items:baseline; gap:24px; flex-wrap:wrap;
+}
+.chapter-foot .next{
+  font-size:13px; letter-spacing:.32em; color:var(--ink-soft);
+}
+.chapter-foot .next em{
+  font-family:var(--serif-en); font-style:italic; letter-spacing:.16em; color:var(--muted);
+  display:block; font-size:11px; margin-top:10px;
+}
+.chapter-foot .colophon{
+  font-size:10.5px; letter-spacing:.22em; color:var(--muted); line-height:2;
+  text-align:right;
+}
+
+/* ============================================================
+   RWD 降級版式（< 1024px）：
+   sticky 雙欄於窄螢幕不可行 → 取消分鏡視窗，
+   改為「上圖下文」區塊式分鏡，於原節點位置置入全幅插圖
+   ============================================================ */
+@media (max-width:1023px){
+  .matrix{ display:block; }
+  .stage-col{ display:none; }
+  .text-col{ border-left:0; padding-top:clamp(40px,7vh,72px); }
+  .m-figure{
+    display:block;
+    margin:clamp(40px,7vh,64px) calc(-1 * clamp(28px,6vw,104px)) clamp(40px,7vh,64px);
+  }
+  .m-figure img{ width:100%; height:auto; }
+  .m-figure figcaption{
+    padding:14px clamp(28px,6vw,104px) 0;
+    font-size:11px; letter-spacing:.24em; line-height:2; color:var(--muted);
+  }
+  .m-figure figcaption .src{ display:block; font-family:var(--serif-en); font-size:10px; letter-spacing:.28em; }
+  .ghost-make .zh{ letter-spacing:.18em; }
+}
+@media (max-width:479px){
+  .masthead{ flex-direction:column; gap:14px; }
+}
+
+/* 無障礙：選擇減少動態者，停用 crossfade 動畫（直接顯示對位圖） */
+@media (prefers-reduced-motion: reduce){
+  .stage .layer, .stage .plate, .stage .caption{ transition:none; }
+}
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="brand">GB BIRCHALL TAIWAN<small>英 國 百 年 茶 事</small></div>
+  <div class="chapter-no">Chapter 01 — The Heritage</div>
+</header>
+
+<section class="chapter-head">
+  <div class="kicker">Since 1872 · Darjeeling</div>
+  <h1>傲骨世家<span class="en">The Heritage — A Family Tradition Since 1872</span></h1>
+  <div class="rule"></div>
+</section>
+
+<div class="matrix">
+
+  <!-- ============ 左欄：100vh sticky 分鏡視窗 ============ -->
+  <div class="stage-col">
+    <div class="stage" id="stage" aria-hidden="true">
+      <div class="plate">
+        <div class="no">01</div>
+        <div class="tt">傲骨世家</div>
+      </div>
+      <!-- 雙圖層交替淡化：兩層 opacity 交替，杜絕切換閃爍 -->
+      <div class="layer" id="layerA"></div>
+      <div class="layer" id="layerB"></div>
+      <div class="caption" id="caption"></div>
+    </div>
+  </div>
+
+  <!-- ============ 右欄：定稿正文（V7.0 施工單） ============ -->
+  <div class="text-col">
+
+    <p class="lede">英國不產茶。大英茶文化的底牌，從來不是倫敦地標與皇家蕾絲邊的地理 Cliché，而是開疆闢土的全球供應鏈選品大腦（Master Blending）。</p>
+
+    <p>故事的起點在 <strong id="node-a">1872 年</strong>。當時正值維多利亞女王統治時期，印度是大英帝國皇冠上的明珠。Captain Birchall George Graham 在陸軍「威靈頓公爵軍團」服役長達 18 年，長年駐守印度。返回英國後，他<strong>變賣了自己的軍職（sold his commission）</strong>以換取全部積蓄。隨後，他重返印度，攜手兄弟 Robert Fuller Graham 前往喜馬拉雅山腳下的大吉嶺，親手種下了第一株茶樹。</p>
+
+    <!-- 行動版分鏡・節點 A -->
+    <figure class="m-figure">
+      <picture>
+        <source srcset="img/fig1-captain-uniform-1200.webp" type="image/webp">
+        <img src="img/fig1-captain-uniform-1200.jpg" width="730" height="1110" loading="lazy" alt="Captain Birchall George Graham 大英帝國軍裝黑白肖像">
+      </picture>
+      <figcaption>圖一 · CAPTAIN BIRCHALL GEORGE GRAHAM<span class="src">Duke of Wellington's Regiment</span></figcaption>
+    </figure>
+
+    <p class="quote">“The bushes took time to grow at such high elevation, but with careful cultivation we created something truly special.”</p>
+
+    <p>大吉嶺知名茶園分布於海拔 1,200 至 2,000 公尺。這片終年雲霧、低溫的高海拔環境，正對應了台灣阿里山、梨山等頂級高山茶的生長條件。在遠隔重洋的印度，茶樹同樣因高山低溫而生長極其緩慢，卻也因此凝聚出與台灣高山茶相同、無可替代的純淨香氣與茶湯厚度。曾駐守 18 年的英國軍官變賣資產，轉而成為大吉嶺茶葉協會的創始會員之一。他終身定居於此，最後<strong id="node-b">長眠於大吉嶺</strong>的茶園之中。</p>
+
+    <!-- 行動版分鏡・節點 B -->
+    <figure class="m-figure">
+      <picture>
+        <source srcset="img/fig3-captain-elder-1200.webp" type="image/webp">
+        <img src="img/fig3-captain-elder-1200.jpg" width="776" height="896" loading="lazy" alt="Captain Birchall Graham 上尉老年黑白肖像">
+      </picture>
+      <figcaption>圖三 · 上尉老年肖像<span class="src">He lived out his days in Darjeeling</span></figcaption>
+    </figure>
+
+    <p>這個家族的五代傳承，團隊核心架構便正式走過了一個半世紀的時間與世界版圖，只為尋找真正值得留下的一片茶葉。這裡沒有任何流於形式的故事包裝與行銷情懷，只有一個家族在 150 年的時間旅程裡，每一天、每一道工序都在執行的理性品控鐵律。這套跨越三個世紀的控制鏈，<strong id="node-c">在產地直接匹配強大的資本採購權（Buying Power）</strong>，在一年年中最正確的季節中斷點買斷頂級茶青。我們在茶園現場即刻進行新鮮封鎖與船運，在速度與原始生命力上領先市場，將剛完成乾燥時最原始、鮮甜、且毫無衰敗苦澀的茶湯實相完美鎖定。這是 Birchall 橫甩同業幾條街的血統底氣。我們平視市場，不自證，不解釋。事實就擺在這裡。</p>
+
+    <!-- 行動版分鏡・節點 C（跨章節關係型調用） -->
+    <figure class="m-figure">
+      <picture>
+        <source media="(min-width:600px)" srcset="img/fig4-shipping-cases-wide-1400.webp" type="image/webp">
+        <source srcset="img/fig4-shipping-cases-wide-900.webp" type="image/webp">
+        <img src="img/fig4-shipping-cases-wide-900.jpg" width="900" height="426" loading="lazy" alt="帶有工廠戳印之 Birchall 原廠工業級運輸外箱實物全景">
+      </picture>
+      <figcaption>原廠工業級運輸外箱 · 產地直運<span class="src">Asset called from — 04. 實業主權 Industrial Sovereignty</span></figcaption>
+    </figure>
+
+    <!-- 潛伏幽靈組件：精確對齊文字欄左緣 -->
+    <div class="ghost-make" aria-hidden="true">
+      <div class="zh">英國製造</div>
+      <div class="en">Made in England · Est. 1872</div>
+    </div>
+
+  </div>
+</div>
+
+<footer class="chapter-foot">
+  <div class="next">下一章 — 04 實業主權<em>Next — Industrial Sovereignty</em></div>
+  <div class="colophon">前端技術驗證 · 內頁雙欄矩陣<br>Sticky Cinematic Viewport / Relational Asset Matrix</div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+/* ============================================================
+   資產登錄表（Relational Asset Registry）
+   正式站對應：品牌資產 CPT + ACF Relationship（雙向）
+   本章（01）僅「引用」資產；節點 C 跨章節調用 04 章資產，
+   資料由單一來源渲染 —— 一處修改、全站交叉路徑同步。
+   ============================================================ */
+var ASSET_REGISTRY = {
+  "01-01": {
+    chapter: "01. 傲骨世家",
+    title: "圖一 · CAPTAIN BIRCHALL GEORGE GRAHAM",
+    source: "Duke of Wellington's Regiment",
+    webp: "img/fig1-captain-uniform-1200.webp",
+    jpg:  "img/fig1-captain-uniform-1200.jpg"
+  },
+  "01-03": {
+    chapter: "01. 傲骨世家",
+    title: "圖三 · 上尉老年肖像",
+    source: "He lived out his days in Darjeeling",
+    webp: "img/fig3-captain-elder-1200.webp",
+    jpg:  "img/fig3-captain-elder-1200.jpg"
+  },
+  "04-01": {
+    chapter: "04. 實業主權",
+    title: "原廠工業級運輸外箱 · 產地直運",
+    source: "Called from — 04. Industrial Sovereignty",
+    webp: "img/fig4-shipping-cases-1200.webp",
+    jpg:  "img/fig4-shipping-cases-1200.jpg"
+  }
+};
+
+(function () {
+  "use strict";
+
+  /* 僅桌機（>=1024px）啟用 sticky 分鏡；行動版走區塊式分鏡，不載入此邏輯 */
+  var mq = window.matchMedia("(min-width:1024px)");
+  if (!mq.matches) { return; }
+  if (typeof gsap === "undefined" || typeof ScrollTrigger === "undefined") {
+    /* CDN 失敗之備援：不做動畫，右欄內容完整可讀（左欄維持字卡） */
+    return;
+  }
+  gsap.registerPlugin(ScrollTrigger);
+
+  var stage    = document.getElementById("stage");
+  var layers   = [document.getElementById("layerA"), document.getElementById("layerB")];
+  var captionEl= document.getElementById("caption");
+  var front    = 0;          /* 目前在最上層的圖層索引 */
+  var currentId= null;       /* 目前顯示的資產 id；null = 開場字卡 */
+  var decoded  = {};         /* 已解碼影像快取 */
+
+  var supportsWebp = (function () {
+    var c = document.createElement("canvas");
+    return c.toDataURL && c.toDataURL("image/webp").indexOf("data:image/webp") === 0;
+  })();
+
+  /* 影像預載＋解碼：於任何淡入發生前完成，杜絕露白屏與跳圖 */
+  function preload(id) {
+    if (decoded[id]) { return decoded[id]; }
+    var a = ASSET_REGISTRY[id];
+    var img = new Image();
+    img.src = supportsWebp ? a.webp : a.jpg;
+    img.alt = "";
+    decoded[id] = (img.decode ? img.decode().catch(function(){}) : Promise.resolve())
+      .then(function () { return img; });
+    return decoded[id];
+  }
+  Object.keys(ASSET_REGISTRY).forEach(preload);
+
+  /* 分鏡遞補：雙圖層交替，1.5s crossfade（規格指定） */
+  function show(id) {
+    if (id === currentId) { return; }
+    currentId = id;
+
+    if (id === null) {                       /* 回捲至節點 A 之前 → 回到字卡 */
+      stage.classList.remove("storying");
+      layers[0].classList.remove("is-active");
+      layers[1].classList.remove("is-active");
+      captionEl.classList.remove("on");
+      return;
+    }
+
+    preload(id).then(function (img) {
+      if (currentId !== id) { return; }      /* 快速滾動時僅落定於最新節點 */
+      var back = 1 - front;
+      var host = layers[back];
+      host.innerHTML = "";
+      host.appendChild(img.cloneNode());
+      /* 下一影格再切 class，確保 transition 確實觸發 */
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () {
+          stage.classList.add("storying");
+          host.classList.add("is-active");
+          layers[front].classList.remove("is-active");
+          front = back;
+          var a = ASSET_REGISTRY[id];
+          captionEl.classList.remove("on");
+          captionEl.innerHTML = a.title + '<span class="src">' + a.source + "</span>";
+          captionEl.classList.add("on");
+        });
+      });
+    });
+  }
+
+  /* 節點對位：右欄文字捲動至指定字眼 → 左欄精準遞補 */
+  var NODES = [
+    { trigger: "#node-a", asset: "01-01", prev: null    },  /* 1872 服役與變賣軍職 */
+    { trigger: "#node-b", asset: "01-03", prev: "01-01" },  /* 長眠大吉嶺 */
+    { trigger: "#node-c", asset: "04-01", prev: "01-03" }   /* Buying Power → 跨章節調用 */
+  ];
+  NODES.forEach(function (n) {
+    ScrollTrigger.create({
+      trigger: n.trigger,
+      start: "top 72%",
+      onEnter:     function () { show(n.asset); },
+      onLeaveBack: function () { show(n.prev);  }
+    });
+  });
+})();
+</script>
+</body>
+</html>
