@@ -50,54 +50,50 @@ body{
 img{ max-width:100%; display:block; }
 ::selection{ background:var(--ink); color:var(--paper); }
 
-/* ---------- 頁首 masthead ---------- */
+/* ---------- 頁首 masthead ----------
+   品牌鎖定完全依原廠展位主視覺結構:
+   左 B 葉徽章＋直立細線｜置中字標(原廠 logo 檔,含金葉撇號與金色年代線)
+   ＋FINE BRITISH TEA｜右長細線—TAIWAN */
 .masthead{
   padding:clamp(28px,4vw,52px) clamp(24px,5vw,72px) 0;
-  display:flex; justify-content:space-between; align-items:baseline;
-  border-bottom:0;
+  display:grid; grid-template-columns:auto auto 1fr; align-items:center;
+  gap:clamp(20px,2.6vw,40px);
 }
-/* 品牌字標鎖定:依原廠 TEA MENU 與展位物料——寬字距襯線字標＋金色葉形撇號＋金色年代字標線 */
-.masthead .brand{
-  font-family:var(--serif-en);
-  font-size:clamp(21px,1.9vw,28px);
-  letter-spacing:.34em;
-  font-weight:500;
+.masthead .mark{ display:flex; align-items:center; gap:clamp(20px,2.6vw,40px); }
+.masthead .mark img{ height:clamp(46px,4.6vw,64px); width:auto; display:block; }
+.masthead .mark .bar{ width:1px; height:clamp(46px,4.6vw,64px); background:var(--hairline); }
+.masthead .lockup{ text-align:center; }
+.masthead .lockup img{ height:clamp(44px,4.2vw,60px); width:auto; display:block; margin:0 auto; }
+.masthead .lockup .fine{
+  font-family:var(--serif-en); font-size:11px; letter-spacing:.42em; text-indent:.42em;
+  color:var(--ink); margin-top:10px; font-weight:500;
 }
-.masthead .brand .leaf{
-  display:inline-block; width:.34em; height:.62em;
-  vertical-align:.42em; margin-left:.06em;
+.masthead .tw{
+  display:flex; align-items:center; gap:clamp(16px,2vw,30px);
+  font-family:var(--serif-en); font-size:clamp(14px,1.3vw,18px);
+  letter-spacing:.5em; color:var(--ink); font-weight:500;
 }
-.masthead .brand small{
-  display:block; font-family:var(--serif-en); font-size:10.5px;
-  letter-spacing:.4em; color:var(--gold); margin-top:9px; font-weight:600;
-}
-.masthead .brand .zh{
-  display:block; font-family:var(--serif-tc); font-size:11px;
-  letter-spacing:.55em; color:var(--muted); margin-top:9px; font-weight:300;
-}
-.masthead .side{ text-align:right; }
-.masthead .side .fine{
-  font-family:var(--serif-en); font-size:11.5px; letter-spacing:.34em;
-  color:var(--ink-soft); margin-bottom:9px;
-}
-.masthead .side .fine .tw{ color:var(--ink); }
-.masthead .side .fine .dash{ color:var(--gold); }
-.masthead .chapter-no{
-  font-family:var(--serif-en); font-style:italic;
-  font-size:clamp(13px,1.1vw,15px); letter-spacing:.18em; color:var(--muted);
-  transition:color .35s ease;
-}
-.masthead .chapter-no:hover{ color:var(--red); }
+.masthead .tw .line{ flex:1; height:1px; background:var(--hairline); }
 
 /* ---------- 章名 ---------- */
 .chapter-head{
   padding:clamp(56px,9vh,120px) clamp(24px,5vw,72px) clamp(48px,8vh,104px);
   max-width:1680px; margin:0 auto;
 }
+.chapter-head .kickrow{
+  display:flex; justify-content:space-between; align-items:baseline;
+  gap:20px; flex-wrap:wrap; margin-bottom:26px;
+}
 .chapter-head .kicker{
   font-family:var(--serif-en); font-size:12px; letter-spacing:.5em;
-  color:var(--gold); font-weight:600; text-transform:uppercase; margin-bottom:26px;
+  color:var(--gold); font-weight:600; text-transform:uppercase;
 }
+.chapter-head .chapter-no{
+  font-family:var(--serif-en); font-style:italic;
+  font-size:clamp(13px,1.1vw,15px); letter-spacing:.18em; color:var(--muted);
+  transition:color .35s ease;
+}
+.chapter-head .chapter-no:hover{ color:var(--red); }
 .chapter-head h1{
   font-size:clamp(34px,4.6vw,64px); font-weight:500;
   letter-spacing:.22em; line-height:1.35;
@@ -277,8 +273,10 @@ img{ max-width:100%; display:block; }
   .text-col .quote{ padding:44px 0; margin:56px 0; }
 }
 @media (max-width:639px){
-  .masthead{ flex-direction:column; gap:16px; }
-  .masthead .side{ text-align:left; }
+  .masthead{ grid-template-columns:1fr; justify-items:center; gap:20px; }
+  .masthead .mark .bar{ display:none; }
+  .masthead .mark img{ height:44px; }
+  .masthead .tw{ width:100%; }
 }
 
 /* 無障礙：選擇減少動態者，停用 crossfade 動畫（直接顯示對位圖） */
@@ -290,15 +288,22 @@ img{ max-width:100%; display:block; }
 <body>
 
 <header class="masthead">
-  <div class="brand">BIRCHALL<svg class="leaf" viewBox="0 0 20 30" aria-hidden="true"><path d="M11.5 1.5 C18 7 19.5 15.5 12.5 28.5 C5.5 17 4.5 8 11.5 1.5 Z" fill="#C5A059"/></svg><small>A&#8202;&#8201;FAMILY&#8202;&#8201;TRADITION&#8202;&#8201;SINCE&#8202;&#8201;1872</small><span class="zh">英 國 百 年 茶 事</span></div>
-  <div class="side">
-    <div class="fine">FINE BRITISH TEA<span class="dash">&nbsp;&mdash;&nbsp;</span><span class="tw">TAIWAN</span></div>
-    <div class="chapter-no">Chapter 01 — The Heritage</div>
+  <div class="mark">
+    <img src="img/birchall-icon.png" alt="Birchall 葉形 B 徽章" width="270" height="270">
+    <span class="bar"></span>
   </div>
+  <div class="lockup">
+    <img src="img/birchall-wordmark.png" alt="BIRCHALL — A Family Tradition Since 1872" width="500" height="118">
+    <div class="fine">FINE BRITISH TEA</div>
+  </div>
+  <div class="tw"><span class="line"></span>TAIWAN</div>
 </header>
 
 <section class="chapter-head">
-  <div class="kicker">Since 1872 · Darjeeling</div>
+  <div class="kickrow">
+    <div class="kicker">Since 1872 · Darjeeling</div>
+    <div class="chapter-no">Chapter 01 — The Heritage</div>
+  </div>
   <h1>傲骨世家<span class="en">The Heritage — A Family Tradition Since 1872</span></h1>
   <div class="rule"></div>
 </section>
