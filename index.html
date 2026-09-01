@@ -14,7 +14,7 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Noto+Serif+TC:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,600&family=Noto+Serif+TC:wght@300;400;500;600&display=swap" rel="stylesheet">
 
 <style>
 /* ============================================================
@@ -24,15 +24,17 @@
    右欄：定稿正文 + 「英國製造」潛伏幽靈組件
    ============================================================ */
 :root{
-  --paper:#f4f1ea;        /* 象牙紙色底 */
-  --ink:#211d18;          /* 墨色 */
+  --paper:#FDFBF7;        /* 全站主底色（原廠指定：極淡米白，紙張閱讀溫度） */
+  --ink:#1f1b16;          /* 冷黑 */
   --ink-soft:#4c463d;
   --muted:#8a8172;
-  --hairline:#ddd6c8;     /* 髮絲線 */
-  --stage-bg:#eae6db;     /* 分鏡視窗底色 */
-  --ghost:#e7e2d5;        /* 幽靈組件 */
+  --hairline:#e9e2d4;     /* 髮絲線 */
+  --stage-bg:#f3eee4;     /* 分鏡視窗底色 */
+  --ghost:#ece5d6;        /* 幽靈組件 */
+  --red:#A22338;          /* 原廠經典識別紅 PANTONE 7420 C（僅限局部點綴，嚴禁平鋪） */
+  --gold:#C5A059;         /* 高奢內斂淡金（金句與圖說細線指定色） */
   --serif-tc:"Noto Serif TC","PMingLiU",serif;
-  --serif-en:"Cormorant Garamond","Times New Roman",serif;
+  --serif-en:"Cormorant Garamond",Garamond,Georgia,"Times New Roman",serif;
   --fade:1.5s;            /* 分鏡遞補時間（規格指定） */
 }
 *{ box-sizing:border-box; margin:0; padding:0; }
@@ -64,7 +66,9 @@ img{ max-width:100%; display:block; }
 .masthead .chapter-no{
   font-family:var(--serif-en); font-style:italic;
   font-size:clamp(13px,1.1vw,15px); letter-spacing:.18em; color:var(--muted);
+  transition:color .35s ease;
 }
+.masthead .chapter-no:hover{ color:var(--red); }
 
 /* ---------- 章名 ---------- */
 .chapter-head{
@@ -131,7 +135,8 @@ img{ max-width:100%; display:block; }
   padding:10px 18px 9px;
   opacity:0; transition:opacity .9s ease .4s;
 }
-.stage .caption .src{ display:block; font-family:var(--serif-en); font-size:10px; letter-spacing:.3em; color:var(--muted); }
+.stage .caption{ border-left:2px solid var(--gold); }
+.stage .caption .src{ display:block; font-size:10px; letter-spacing:.3em; color:var(--gold); }
 .stage .caption.on{ opacity:1; }
 
 /* 右欄：正文 */
@@ -151,35 +156,58 @@ img{ max-width:100%; display:block; }
   margin-bottom:clamp(34px,4.5vh,52px);
 }
 .text-col p strong{ font-weight:500; color:var(--ink); }
+/* facts 數據強調:原廠識別紅,僅限數據字眼局部使用 */
+.text-col p .fact{ color:var(--red); font-weight:500; }
+/* 英語原創金句區塊：獨立死鎖,大字/加粗斜體/深色襯線,前後呼吸空間固定 */
 .text-col .quote{
-  font-family:var(--serif-en); font-style:italic; font-weight:400;
-  font-size:clamp(17px,1.4vw,21px); line-height:2.1; letter-spacing:.02em;
+  font-family:var(--serif-en); font-style:italic; font-weight:600;
+  font-size:clamp(23px,2vw,31px); line-height:1.85; letter-spacing:.01em;
   color:var(--ink); text-align:left;
-  border-left:1px solid var(--ink);
-  padding-left:28px; margin:clamp(44px,6vh,64px) 0;
+  border-top:1px solid var(--gold);
+  border-bottom:1px solid var(--gold);
+  padding:56px 0;          /* 死鎖:金句上下內距固定 56px */
+  margin:72px 0;           /* 死鎖:與前後正文固定 72px 呼吸空間 */
+}
+.text-col .quote::before{
+  content:"“";
+  display:block;
+  font-size:52px; line-height:.4; font-weight:400;
+  color:var(--gold);
+  margin-bottom:26px;
 }
 /* 行動版分鏡（上圖下文區塊式）：桌機隱藏 */
 .m-figure{ display:none; }
 
 /* ---------- 「英國製造」潛伏幽靈組件 ----------
-   規格：右欄文字下方，精確對齊文字欄，低伏於紙面 */
+   規格：右欄文字下方，精確對齊文字欄左緣，低伏於紙面；
+   Facts 鋼印以完整長文渲染，字級/字距/左緣自訂 CSS 控管 */
 .ghost-make{
   margin-top:clamp(64px,10vh,120px);
   padding-bottom:clamp(72px,12vh,140px);
   user-select:none;
 }
 .ghost-make .zh{
-  font-size:clamp(64px,7.2vw,118px); font-weight:600;
+  font-size:clamp(58px,7.2vw,118px); font-weight:600;
   letter-spacing:.3em; line-height:1;
   color:transparent;
   -webkit-text-stroke:1px var(--ghost);
   white-space:nowrap;
 }
 .ghost-make .en{
-  font-family:var(--serif-en); font-size:clamp(11px,1vw,13px);
-  letter-spacing:.58em; color:var(--ghost);
-  margin-top:22px; text-transform:uppercase;
+  font-family:var(--serif-en); font-size:13px;
+  letter-spacing:.5em; color:var(--muted);
+  margin-top:26px; text-transform:uppercase;
 }
+.ghost-make .facts{
+  margin-top:16px;
+  font-size:13.5px; font-weight:400;
+  letter-spacing:.16em; line-height:2.2;
+  color:var(--ink-soft);
+  display:flex; align-items:center; flex-wrap:wrap; gap:12px;
+}
+.ghost-make .facts .flag{ width:21px; height:13px; display:inline-block; flex:none; }
+.ghost-make .facts .sep{ color:var(--red); font-weight:300; }
+.ghost-make .facts strong{ font-weight:600; color:var(--ink); }
 
 /* ---------- 章節收尾 ---------- */
 .chapter-foot{
@@ -190,7 +218,9 @@ img{ max-width:100%; display:block; }
 }
 .chapter-foot .next{
   font-size:13px; letter-spacing:.32em; color:var(--ink-soft);
+  cursor:pointer; transition:color .35s ease;
 }
+.chapter-foot .next:hover{ color:var(--red); }
 .chapter-foot .next em{
   font-family:var(--serif-en); font-style:italic; letter-spacing:.16em; color:var(--muted);
   display:block; font-size:11px; margin-top:10px;
@@ -209,17 +239,23 @@ img{ max-width:100%; display:block; }
   .matrix{ display:block; }
   .stage-col{ display:none; }
   .text-col{ border-left:0; padding-top:clamp(40px,7vh,72px); }
+  /* 行動版分鏡卡片：左右間距死鎖於 24~32px 防線,不吃滿邊緣,
+     與上下文字固定保留 48px 以上呼吸空間,呈懸浮雜誌卡片感 */
   .m-figure{
     display:block;
-    margin:clamp(40px,7vh,64px) calc(-1 * clamp(28px,6vw,104px)) clamp(40px,7vh,64px);
+    margin:56px calc(clamp(24px,7vw,32px) - clamp(28px,6vw,104px)) 56px;
   }
-  .m-figure img{ width:100%; height:auto; }
+  .m-figure img{
+    width:100%; height:auto;
+    box-shadow:0 14px 34px rgba(31,27,22,.10);
+  }
   .m-figure figcaption{
-    padding:14px clamp(28px,6vw,104px) 0;
+    padding:18px 2px 0;
     font-size:11px; letter-spacing:.24em; line-height:2; color:var(--muted);
   }
-  .m-figure figcaption .src{ display:block; font-family:var(--serif-en); font-size:10px; letter-spacing:.28em; }
+  .m-figure figcaption .src{ display:block; font-family:var(--serif-en); font-size:10px; letter-spacing:.28em; color:var(--gold); }
   .ghost-make .zh{ letter-spacing:.18em; }
+  .text-col .quote{ padding:44px 0; margin:56px 0; }
 }
 @media (max-width:479px){
   .masthead{ flex-direction:column; gap:14px; }
@@ -265,7 +301,7 @@ img{ max-width:100%; display:block; }
 
     <p class="lede">英國不產茶。大英茶文化的底牌，從來不是倫敦地標與皇家蕾絲邊的地理 Cliché，而是開疆闢土的全球供應鏈選品大腦（Master Blending）。</p>
 
-    <p>故事的起點在 <strong id="node-a">1872 年</strong>。當時正值維多利亞女王統治時期，印度是大英帝國皇冠上的明珠。Captain Birchall George Graham 在陸軍「威靈頓公爵軍團」服役長達 18 年，長年駐守印度。返回英國後，他<strong>變賣了自己的軍職（sold his commission）</strong>以換取全部積蓄。隨後，他重返印度，攜手兄弟 Robert Fuller Graham 前往喜馬拉雅山腳下的大吉嶺，親手種下了第一株茶樹。</p>
+    <p>故事的起點在 <strong id="node-a">1872 年</strong>。當時正值維多利亞女王統治時期，印度是大英帝國皇冠上的明珠。Captain Birchall George Graham 在陸軍「威靈頓公爵軍團」服役長達 <span class="fact">18 年</span>，長年駐守印度。返回英國後，他<strong>變賣了自己的軍職（sold his commission）</strong>以換取全部積蓄。隨後，他重返印度，攜手兄弟 Robert Fuller Graham 前往喜馬拉雅山腳下的大吉嶺，親手種下了第一株茶樹。</p>
 
     <!-- 行動版分鏡・節點 A -->
     <figure class="m-figure">
@@ -276,9 +312,9 @@ img{ max-width:100%; display:block; }
       <figcaption>圖一 · CAPTAIN BIRCHALL GEORGE GRAHAM<span class="src">Duke of Wellington's Regiment</span></figcaption>
     </figure>
 
-    <p class="quote">“The bushes took time to grow at such high elevation, but with careful cultivation we created something truly special.”</p>
+    <p class="quote">The bushes took time to grow at such high elevation, but with careful cultivation we created something truly special.</p>
 
-    <p>大吉嶺知名茶園分布於海拔 1,200 至 2,000 公尺。這片終年雲霧、低溫的高海拔環境，正對應了台灣阿里山、梨山等頂級高山茶的生長條件。在遠隔重洋的印度，茶樹同樣因高山低溫而生長極其緩慢，卻也因此凝聚出與台灣高山茶相同、無可替代的純淨香氣與茶湯厚度。曾駐守 18 年的英國軍官變賣資產，轉而成為大吉嶺茶葉協會的創始會員之一。他終身定居於此，最後<strong id="node-b">長眠於大吉嶺</strong>的茶園之中。</p>
+    <p>大吉嶺知名茶園分布於海拔 <span class="fact">1,200 至 2,000 公尺</span>。這片終年雲霧、低溫的高海拔環境，正對應了台灣阿里山、梨山等頂級高山茶的生長條件。在遠隔重洋的印度，茶樹同樣因高山低溫而生長極其緩慢，卻也因此凝聚出與台灣高山茶相同、無可替代的純淨香氣與茶湯厚度。曾駐守 18 年的英國軍官變賣資產，轉而成為大吉嶺茶葉協會的創始會員之一。他終身定居於此，最後<strong id="node-b">長眠於大吉嶺</strong>的茶園之中。</p>
 
     <!-- 行動版分鏡・節點 B -->
     <figure class="m-figure">
@@ -289,7 +325,7 @@ img{ max-width:100%; display:block; }
       <figcaption>圖三 · 上尉老年肖像<span class="src">He lived out his days in Darjeeling</span></figcaption>
     </figure>
 
-    <p>這個家族的五代傳承，團隊核心架構便正式走過了一個半世紀的時間與世界版圖，只為尋找真正值得留下的一片茶葉。這裡沒有任何流於形式的故事包裝與行銷情懷，只有一個家族在 150 年的時間旅程裡，每一天、每一道工序都在執行的理性品控鐵律。這套跨越三個世紀的控制鏈，<strong id="node-c">在產地直接匹配強大的資本採購權（Buying Power）</strong>，在一年年中最正確的季節中斷點買斷頂級茶青。我們在茶園現場即刻進行新鮮封鎖與船運，在速度與原始生命力上領先市場，將剛完成乾燥時最原始、鮮甜、且毫無衰敗苦澀的茶湯實相完美鎖定。這是 Birchall 橫甩同業幾條街的血統底氣。我們平視市場，不自證，不解釋。事實就擺在這裡。</p>
+    <p>這個家族的五代傳承，團隊核心架構便正式走過了一個半世紀的時間與世界版圖，只為尋找真正值得留下的一片茶葉。這裡沒有任何流於形式的故事包裝與行銷情懷，只有一個家族在 <span class="fact">150 年</span>的時間旅程裡，每一天、每一道工序都在執行的理性品控鐵律。這套跨越三個世紀的控制鏈，<strong id="node-c">在產地直接匹配強大的資本採購權（Buying Power）</strong>，在一年年中最正確的季節中斷點買斷頂級茶青。我們在茶園現場即刻進行新鮮封鎖與船運，在速度與原始生命力上領先市場，將剛完成乾燥時最原始、鮮甜、且毫無衰敗苦澀的茶湯實相完美鎖定。這是 Birchall 橫甩同業幾條街的血統底氣。我們平視市場，不自證，不解釋。事實就擺在這裡。</p>
 
     <!-- 行動版分鏡・節點 C（跨章節關係型調用） -->
     <figure class="m-figure">
@@ -298,13 +334,17 @@ img{ max-width:100%; display:block; }
         <source srcset="img/fig4-shipping-cases-wide-900.webp" type="image/webp">
         <img src="img/fig4-shipping-cases-wide-900.jpg" width="900" height="426" loading="lazy" alt="帶有工廠戳印之 Birchall 原廠工業級運輸外箱實物全景">
       </picture>
-      <figcaption>原廠工業級運輸外箱 · 產地直運<span class="src">Asset called from — 04. 實業主權 Industrial Sovereignty</span></figcaption>
+      <figcaption>原廠工業級運輸外箱 · 產地直運<span class="src">調用自【04. 實業主權】章節資產</span></figcaption>
     </figure>
 
-    <!-- 潛伏幽靈組件：精確對齊文字欄左緣 -->
-    <div class="ghost-make" aria-hidden="true">
-      <div class="zh">英國製造</div>
+    <!-- 潛伏幽靈組件：精確對齊文字欄左緣,Facts 鋼印完整長文渲染 -->
+    <div class="ghost-make">
+      <div class="zh" aria-hidden="true">英國製造</div>
       <div class="en">Made in England · Est. 1872</div>
+      <p class="facts">
+        <svg class="flag" viewBox="0 0 60 36" aria-label="英國國旗" role="img"><rect width="60" height="36" fill="#012169"/><path d="M0,0 60,36 M60,0 0,36" stroke="#FDFBF7" stroke-width="7"/><path d="M0,0 60,36 M60,0 0,36" stroke="#A22338" stroke-width="3"/><path d="M30,0 V36 M0,18 H60" stroke="#FDFBF7" stroke-width="12"/><path d="M30,0 V36 M0,18 H60" stroke="#A22338" stroke-width="7"/></svg>
+        <span>英國製造</span><span class="sep">｜</span><span><strong>100% Made in the UK.</strong> 每一片茶包皆在威爾特郡原廠完成調配封裝。</span>
+      </p>
     </div>
 
   </div>
@@ -342,7 +382,7 @@ var ASSET_REGISTRY = {
   "04-01": {
     chapter: "04. 實業主權",
     title: "原廠工業級運輸外箱 · 產地直運",
-    source: "Called from — 04. Industrial Sovereignty",
+    source: "調用自【04. 實業主權】章節資產",
     webp: "img/fig4-shipping-cases-1200.webp",
     jpg:  "img/fig4-shipping-cases-1200.jpg"
   }
