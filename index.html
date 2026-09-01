@@ -171,6 +171,8 @@ img{ max-width:100%; display:block; }
   margin-bottom:clamp(34px,4.5vh,52px);
 }
 .text-col p strong{ font-weight:500; color:var(--ink); }
+/* 終曲段:加大段前距,節點 B→C 的分鏡停留與敘事收尾同步拉開 */
+.text-col p.finale{ margin-top:clamp(56px,9vh,96px); }
 /* facts 數據強調:原廠識別紅,僅限數據字眼局部使用 */
 .text-col p .fact{ color:var(--red); font-weight:500; }
 /* 英語原創金句區塊：獨立死鎖,大字/加粗斜體/深色襯線,前後呼吸空間固定 */
@@ -360,7 +362,7 @@ img{ max-width:100%; display:block; }
       <figcaption>圖三 · 上尉老年肖像<span class="src">He lived out his days in Darjeeling</span></figcaption>
     </figure>
 
-    <p>這個家族的五代傳承，團隊核心架構便正式走過了一個半世紀的時間與世界版圖，只為尋找真正值得留下的一片茶葉。這裡沒有任何流於形式的故事包裝與行銷情懷，只有一個家族在 <span class="fact">150 年</span>的時間旅程裡，每一天、每一道工序都在執行的理性品控鐵律。這套跨越三個世紀的控制鏈，<strong id="node-c">在產地直接匹配強大的資本採購權（Buying Power）</strong>，在一年年中最正確的季節中斷點買斷頂級茶青。我們在茶園現場即刻進行新鮮封鎖與船運，在速度與原始生命力上領先市場，將剛完成乾燥時最原始、鮮甜、且毫無衰敗苦澀的茶湯實相完美鎖定。這是 Birchall 橫甩同業幾條街的血統底氣。我們平視市場，不自證，不解釋。事實就擺在這裡。</p>
+    <p class="finale">這個家族的五代傳承，團隊核心架構便正式走過了一個半世紀的時間與世界版圖，只為尋找真正值得留下的一片茶葉。這裡沒有任何流於形式的故事包裝與行銷情懷，只有一個家族在 <span class="fact">150 年</span>的時間旅程裡，每一天、每一道工序都在執行的理性品控鐵律。這套跨越三個世紀的控制鏈，<strong id="node-c">在產地直接匹配強大的資本採購權（Buying Power）</strong>，在一年年中最正確的季節中斷點買斷頂級茶青。我們在茶園現場即刻進行新鮮封鎖與船運，在速度與原始生命力上領先市場，將剛完成乾燥時最原始、鮮甜、且毫無衰敗苦澀的茶湯實相完美鎖定。這是 Birchall 橫甩同業幾條街的血統底氣。我們平視市場，不自證，不解釋。事實就擺在這裡。</p>
 
     <!-- 行動版分鏡・節點 C（跨章節關係型調用） -->
     <figure class="m-figure">
@@ -496,16 +498,17 @@ var ASSET_REGISTRY = {
     });
   }
 
-  /* 節點對位：右欄文字捲動至指定字眼 → 左欄精準遞補 */
+  /* 節點對位：右欄文字捲動至指定字眼 → 左欄精準遞補。
+     各節點獨立觸發線：B 提早、C 延後，確保圖三有足夠停留區間 */
   var NODES = [
-    { trigger: "#node-a", asset: "01-01", prev: null    },  /* 1872 服役與變賣軍職 */
-    { trigger: "#node-b", asset: "01-03", prev: "01-01" },  /* 長眠大吉嶺 */
-    { trigger: "#node-c", asset: "04-01", prev: "01-03" }   /* Buying Power → 跨章節調用 */
+    { trigger: "#node-a", asset: "01-01", prev: null,    start: "top 72%" },  /* 1872 服役與變賣軍職 */
+    { trigger: "#node-b", asset: "01-03", prev: "01-01", start: "top 82%" },  /* 長眠大吉嶺 */
+    { trigger: "#node-c", asset: "04-01", prev: "01-03", start: "top 45%" }   /* Buying Power → 跨章節調用 */
   ];
   NODES.forEach(function (n) {
     ScrollTrigger.create({
       trigger: n.trigger,
-      start: "top 72%",
+      start: n.start,
       onEnter:     function () { show(n.asset); },
       onLeaveBack: function () { show(n.prev);  }
     });
