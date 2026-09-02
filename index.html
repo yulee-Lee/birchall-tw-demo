@@ -233,26 +233,98 @@ img{ max-width:100%; display:block; }
 .ghost-make .facts .sep{ color:var(--red); font-weight:300; }
 .ghost-make .facts strong{ font-weight:600; color:var(--ink); }
 
-/* ---------- 章節收尾 ---------- */
-.chapter-foot{
+/* ---------- 全站 Footer:矩陣型資產導覽 ----------
+   導覽連結由資產登錄表渲染,所有點擊路徑=同一資產 ID 跨故事調用 */
+.site-foot{
   max-width:1680px; margin:0 auto;
   border-top:1px solid var(--hairline);
-  padding:clamp(36px,6vh,64px) clamp(24px,5vw,72px) clamp(48px,8vh,88px);
-  display:flex; justify-content:space-between; align-items:baseline; gap:24px; flex-wrap:wrap;
+  padding:clamp(44px,7vh,76px) clamp(24px,5vw,72px) clamp(40px,6vh,64px);
 }
-.chapter-foot .next{
-  font-size:13px; letter-spacing:.32em; color:var(--ink-soft);
+.foot-grid{
+  display:grid; grid-template-columns:1.5fr 1fr 1fr;
+  gap:clamp(32px,4vw,64px); align-items:start;
+}
+.foot-brand img{ height:38px; width:auto; }
+.foot-brand p{
+  font-size:11px; letter-spacing:.3em; color:var(--muted);
+  line-height:2.2; margin-top:18px;
+}
+.foot-col .ft{
+  font-family:var(--serif-en); font-size:11px; letter-spacing:.4em;
+  color:var(--gold); font-weight:600; text-transform:uppercase; margin-bottom:18px;
+}
+.foot-col ul{ list-style:none; }
+.foot-col li{ margin:0 0 14px; }
+.foot-col a{
+  display:inline-block; color:var(--ink-soft); text-decoration:none;
+  font-size:13.5px; letter-spacing:.14em; line-height:1.8;
   cursor:pointer; transition:color .35s ease;
 }
-.chapter-foot .next:hover{ color:var(--red); }
-.chapter-foot .next em{
-  font-family:var(--serif-en); font-style:italic; letter-spacing:.16em; color:var(--muted);
-  display:block; font-size:11px; margin-top:10px;
+.foot-col a:hover{ color:var(--red); }
+.foot-col a .tag{
+  display:block; font-family:var(--serif-en); font-size:10px;
+  letter-spacing:.24em; color:var(--muted);
 }
-.chapter-foot .colophon{
+.foot-base{
+  display:flex; justify-content:space-between; align-items:baseline; gap:24px; flex-wrap:wrap;
+  border-top:1px solid var(--hairline);
+  margin-top:clamp(36px,5vh,56px); padding-top:clamp(20px,3vh,32px);
   font-size:10.5px; letter-spacing:.22em; color:var(--muted); line-height:2;
-  text-align:right;
 }
+
+/* ---------- 資產檢視卡:單一來源渲染＋資產端反查 ---------- */
+.asset-view{ position:fixed; inset:0; z-index:60; display:none; }
+.asset-view.open{ display:block; }
+.asset-view .veil{ position:absolute; inset:0; background:rgba(31,27,22,.48); }
+.asset-view .card{
+  position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+  width:min(640px, calc(100vw - 48px)); max-height:88vh; overflow:auto;
+  background:var(--paper); border:1px solid var(--hairline);
+}
+.asset-view .card .photo img{ width:100%; height:auto; max-height:52vh; object-fit:cover; object-position:center 30%; display:block; }
+.asset-view .card .stampbox{
+  padding:clamp(40px,6vh,64px) 34px; text-align:center; border-bottom:1px solid var(--hairline);
+}
+.asset-view .card .stampbox .zh{
+  font-size:clamp(44px,8vw,72px); font-weight:600; letter-spacing:.24em; line-height:1;
+  color:transparent; -webkit-text-stroke:1px var(--gold); white-space:nowrap;
+}
+.asset-view .card .stampbox .flagrow{
+  display:flex; justify-content:center; align-items:center; gap:12px;
+  margin-top:24px; font-size:12.5px; letter-spacing:.2em; color:var(--ink-soft);
+}
+.asset-view .card .stampbox .flagrow svg{ width:21px; height:13px; flex:none; }
+.asset-view .card .body{ padding:26px 34px 34px; }
+.asset-view .card .aid{
+  font-family:var(--serif-en); font-size:10.5px; letter-spacing:.3em;
+  color:var(--gold); text-transform:uppercase; margin-bottom:10px;
+}
+.asset-view .card h3{
+  font-size:17px; font-weight:500; letter-spacing:.12em; line-height:1.8; margin-bottom:6px;
+}
+.asset-view .card .src{
+  font-family:var(--serif-en); font-size:12px; letter-spacing:.14em; color:var(--muted);
+  margin-bottom:22px;
+}
+.asset-view .card .refs .rt{
+  font-size:11px; letter-spacing:.32em; color:var(--gold); margin-bottom:12px; font-weight:500;
+}
+.asset-view .card .refs ul{ list-style:none; }
+.asset-view .card .refs li{
+  font-size:12.5px; letter-spacing:.1em; line-height:2.1; color:var(--ink-soft);
+  border-left:2px solid var(--gold); padding-left:14px; margin-bottom:10px;
+}
+.asset-view .card .close{
+  position:absolute; top:0; right:0; width:44px; height:44px;
+  background:var(--paper); border:0; border-left:1px solid var(--hairline); border-bottom:1px solid var(--hairline);
+  font-family:var(--serif-en); font-size:18px; color:var(--ink); cursor:pointer;
+}
+.asset-view .card .close:hover{ color:var(--red); }
+/* 全站可點擊之資產路徑 */
+[data-asset]{ cursor:pointer; }
+.stage .caption[data-asset]:hover{ border-left-color:var(--red); }
+.ghost-make[data-asset] .en{ transition:color .35s ease; }
+.ghost-make[data-asset]:hover .en{ color:var(--red); }
 
 /* ============================================================
    RWD 降級版式（< 1024px）：
@@ -280,6 +352,10 @@ img{ max-width:100%; display:block; }
   .m-figure figcaption .src{ display:block; font-family:var(--serif-en); font-size:10px; letter-spacing:.28em; color:var(--gold); }
   .ghost-make .zh{ letter-spacing:.18em; }
   .text-col .quote{ padding:44px 0; margin:56px 0; }
+}
+@media (max-width:767px){
+  .foot-grid{ grid-template-columns:1fr; }
+  .foot-base{ flex-direction:column; gap:6px; }
 }
 @media (max-width:639px){
   .masthead{ grid-template-columns:1fr; justify-items:center; gap:20px; }
@@ -341,7 +417,7 @@ img{ max-width:100%; display:block; }
     <p>故事的起點在 <strong id="node-a">1872 年</strong>。當時正值維多利亞女王統治時期，印度是大英帝國皇冠上的明珠。Captain Birchall George Graham 在陸軍「威靈頓公爵軍團」服役長達 <span class="fact">18 年</span>，長年駐守印度。返回英國後，他<strong>變賣了自己的軍職（sold his commission）</strong>以換取全部積蓄。隨後，他重返印度，攜手兄弟 Robert Fuller Graham 前往喜馬拉雅山腳下的大吉嶺，親手種下了第一株茶樹。</p>
 
     <!-- 行動版分鏡・節點 A -->
-    <figure class="m-figure">
+    <figure class="m-figure" data-asset="01-01">
       <picture>
         <source srcset="img/fig1-captain-uniform-1200.webp" type="image/webp">
         <img src="img/fig1-captain-uniform-1200.jpg" width="730" height="1110" loading="lazy" alt="Captain Birchall George Graham 大英帝國軍裝黑白肖像">
@@ -354,7 +430,7 @@ img{ max-width:100%; display:block; }
     <p>大吉嶺知名茶園分布於海拔 <span class="fact">1,200 至 2,000 公尺</span>。這片終年雲霧、低溫的高海拔環境，正對應了台灣阿里山、梨山等頂級高山茶的生長條件。在遠隔重洋的印度，茶樹同樣因高山低溫而生長極其緩慢，卻也因此凝聚出與台灣高山茶相同、無可替代的純淨香氣與茶湯厚度。曾駐守 18 年的英國軍官變賣資產，轉而成為大吉嶺茶葉協會的創始會員之一。他終身定居於此，最後<strong id="node-b">長眠於大吉嶺</strong>的茶園之中。</p>
 
     <!-- 行動版分鏡・節點 B -->
-    <figure class="m-figure">
+    <figure class="m-figure" data-asset="01-03">
       <picture>
         <source srcset="img/fig3-captain-elder-1200.webp" type="image/webp">
         <img src="img/fig3-captain-elder-1200.jpg" width="776" height="896" loading="lazy" alt="Captain Birchall Graham 上尉老年黑白肖像">
@@ -365,7 +441,7 @@ img{ max-width:100%; display:block; }
     <p class="finale">這個家族的五代傳承，團隊核心架構便正式走過了一個半世紀的時間與世界版圖，只為尋找真正值得留下的一片茶葉。這裡沒有任何流於形式的故事包裝與行銷情懷，只有一個家族在 <span class="fact">150 年</span>的時間旅程裡，每一天、每一道工序都在執行的理性品控鐵律。這套跨越三個世紀的控制鏈，<strong id="node-c">在產地直接匹配強大的資本採購權（Buying Power）</strong>，在一年年中最正確的季節中斷點買斷頂級茶青。我們在茶園現場即刻進行新鮮封鎖與船運，在速度與原始生命力上領先市場，將剛完成乾燥時最原始、鮮甜、且毫無衰敗苦澀的茶湯實相完美鎖定。這是 Birchall 橫甩同業幾條街的血統底氣。我們平視市場，不自證，不解釋。事實就擺在這裡。</p>
 
     <!-- 行動版分鏡・節點 C（跨章節關係型調用） -->
-    <figure class="m-figure">
+    <figure class="m-figure" data-asset="04-01">
       <picture>
         <source media="(min-width:600px)" srcset="img/fig4-shipping-cases-wide-1400.webp" type="image/webp">
         <source srcset="img/fig4-shipping-cases-wide-900.webp" type="image/webp">
@@ -374,8 +450,8 @@ img{ max-width:100%; display:block; }
       <figcaption>原廠工業級運輸外箱 · 產地直運<span class="src">調用自【04. 實業主權】章節資產</span></figcaption>
     </figure>
 
-    <!-- 潛伏幽靈組件：精確對齊文字欄左緣,Facts 鋼印完整長文渲染 -->
-    <div class="ghost-make">
+    <!-- 潛伏幽靈組件：精確對齊文字欄左緣,Facts 鋼印完整長文渲染;點擊=調用「英國製造」資產 -->
+    <div class="ghost-make" data-asset="uk-made" role="button" tabindex="0" aria-label="檢視品牌資產:英國製造">
       <div class="zh" aria-hidden="true">英國製造</div>
       <div class="en">Made in England · Est. 1872</div>
       <p class="facts">
@@ -388,10 +464,47 @@ img{ max-width:100%; display:block; }
   </div>
 </div>
 
-<footer class="chapter-foot">
-  <div class="next">下一章 — 04 實業主權<em>Next — Industrial Sovereignty</em></div>
-  <div class="colophon">前端技術驗證 · 內頁雙欄矩陣<br>Sticky Cinematic Viewport / Relational Asset Matrix</div>
+<footer class="site-foot">
+  <div class="foot-grid">
+    <div class="foot-brand">
+      <img src="img/birchall-wordmark.png" alt="BIRCHALL — A Family Tradition Since 1872" width="500" height="118">
+      <p>英國百年茶事 · FINE BRITISH TEA — TAIWAN</p>
+    </div>
+    <div class="foot-col">
+      <div class="ft">Brand Assets · 品牌資產</div>
+      <ul id="footAssets"></ul>
+    </div>
+    <div class="foot-col">
+      <div class="ft">Chapters · 故事章節</div>
+      <ul>
+        <li><a data-asset="01-01">01 傲骨世家<span class="tag">The Heritage — 本頁</span></a></li>
+        <li><a data-asset="04-01">04 實業主權<span class="tag">Industrial Sovereignty — 下一章</span></a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="foot-base">
+    <span>Footer 導覽由品牌資產登錄表單一來源渲染 · 點擊路徑＝資產 ID 跨故事調用</span>
+    <span>前端技術驗證 · 內頁雙欄矩陣</span>
+  </div>
 </footer>
+
+<!-- 資產檢視卡:點擊任一資產路徑,由登錄表單一來源渲染,含資產端反查 -->
+<div class="asset-view" id="assetView" role="dialog" aria-modal="true" aria-label="品牌資產檢視">
+  <div class="veil" data-close></div>
+  <div class="card">
+    <button class="close" data-close aria-label="關閉">×</button>
+    <div id="assetMedia"></div>
+    <div class="body">
+      <div class="aid" id="assetId"></div>
+      <h3 id="assetTitle"></h3>
+      <div class="src" id="assetSource"></div>
+      <div class="refs">
+        <div class="rt">本資產出現於 · 資產端反查</div>
+        <ul id="assetRefs"></ul>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
@@ -405,24 +518,38 @@ img{ max-width:100%; display:block; }
 var ASSET_REGISTRY = {
   "01-01": {
     chapter: "01. 傲骨世家",
+    nav: "上尉軍裝肖像",
     title: "圖一 · CAPTAIN BIRCHALL GEORGE GRAHAM",
     source: "Duke of Wellington's Regiment",
     webp: "img/fig1-captain-uniform-1200.webp",
-    jpg:  "img/fig1-captain-uniform-1200.jpg"
+    jpg:  "img/fig1-captain-uniform-1200.jpg",
+    usedIn: ["01. 傲骨世家 — 分鏡節點 A（主要頁面）"]
   },
   "01-03": {
     chapter: "01. 傲骨世家",
+    nav: "上尉老年肖像",
     title: "圖三 · 上尉老年肖像",
     source: "He lived out his days in Darjeeling",
     webp: "img/fig3-captain-elder-1200.webp",
-    jpg:  "img/fig3-captain-elder-1200.jpg"
+    jpg:  "img/fig3-captain-elder-1200.jpg",
+    usedIn: ["01. 傲骨世家 — 分鏡節點 B（主要頁面）"]
   },
   "04-01": {
     chapter: "04. 實業主權",
+    nav: "原廠運輸外箱",
     title: "原廠工業級運輸外箱 · 產地直運",
     source: "調用自【04. 實業主權】章節資產",
     webp: "img/fig4-shipping-cases-1200.webp",
-    jpg:  "img/fig4-shipping-cases-1200.jpg"
+    jpg:  "img/fig4-shipping-cases-1200.jpg",
+    usedIn: ["04. 實業主權 — 主場資產（主要頁面）", "01. 傲骨世家 — 分鏡節點 C（跨章節調用）"]
+  },
+  "uk-made": {
+    chapter: "品牌資產",
+    nav: "英國製造",
+    title: "英國製造 · Made in England",
+    source: "100% Made in the UK · 威爾特郡原廠調配封裝",
+    stamp: true,
+    usedIn: ["傳承（01. 傲骨世家）— 主要頁面 · 幽靈組件", "首頁 — 摘要出現", "茶品世界 — 延伸出現"]
   }
 };
 
@@ -492,6 +619,7 @@ var ASSET_REGISTRY = {
           var a = ASSET_REGISTRY[id];
           captionEl.classList.remove("on");
           captionEl.innerHTML = a.title + '<span class="src">' + a.source + "</span>";
+          captionEl.setAttribute("data-asset", id);   /* 圖說即資產路徑,可點擊反查 */
           captionEl.classList.add("on");
         });
       });
@@ -512,6 +640,79 @@ var ASSET_REGISTRY = {
       onEnter:     function () { show(n.asset); },
       onLeaveBack: function () { show(n.prev);  }
     });
+  });
+})();
+
+/* ============================================================
+   矩陣型資產導覽:Footer 連結由登錄表單一來源渲染,
+   全站點擊路徑（Footer/幽靈組件/圖說/行動分鏡）＝同一資產 ID 調用,
+   資產卡含「出現於」反查——對應正式站 ACF Relationship 雙向關聯
+   ============================================================ */
+(function () {
+  "use strict";
+
+  /* Footer 資產導覽:自登錄表渲染 */
+  var footList = document.getElementById("footAssets");
+  Object.keys(ASSET_REGISTRY).forEach(function (id) {
+    var a = ASSET_REGISTRY[id];
+    var li = document.createElement("li");
+    var link = document.createElement("a");
+    link.setAttribute("data-asset", id);
+    link.innerHTML = a.nav + '<span class="tag">' + a.chapter + " · " + id.toUpperCase() + "</span>";
+    li.appendChild(link);
+    footList.appendChild(li);
+  });
+
+  var view    = document.getElementById("assetView");
+  var media   = document.getElementById("assetMedia");
+  var idEl    = document.getElementById("assetId");
+  var titleEl = document.getElementById("assetTitle");
+  var srcEl   = document.getElementById("assetSource");
+  var refsEl  = document.getElementById("assetRefs");
+
+  function openAsset(id) {
+    var a = ASSET_REGISTRY[id];
+    if (!a) { return; }
+    if (a.stamp) {
+      /* 「英國製造」資產:鋼印式渲染,國旗自頁面幽靈組件複製（單一來源） */
+      var flag = document.querySelector(".ghost-make .facts .flag");
+      media.innerHTML = '<div class="stampbox"><div class="zh">英國製造</div><div class="flagrow"></div></div>';
+      var row = media.querySelector(".flagrow");
+      if (flag) { row.appendChild(flag.cloneNode(true)); }
+      row.insertAdjacentHTML("beforeend", "<span>100% Made in the UK</span>");
+    } else {
+      media.innerHTML = '<div class="photo"><picture><source srcset="' + a.webp +
+        '" type="image/webp"><img src="' + a.jpg + '" alt="' + a.title + '"></picture></div>';
+    }
+    idEl.textContent    = "Asset · " + id.toUpperCase();
+    titleEl.textContent = a.title;
+    srcEl.textContent   = a.source;
+    refsEl.innerHTML    = "";
+    a.usedIn.forEach(function (u) {
+      var li = document.createElement("li");
+      li.textContent = u;
+      refsEl.appendChild(li);
+    });
+    view.classList.add("open");
+    document.body.style.overflow = "hidden";
+  }
+  function closeAsset() {
+    view.classList.remove("open");
+    document.body.style.overflow = "";
+  }
+
+  document.addEventListener("click", function (e) {
+    if (e.target.closest("[data-close]")) { closeAsset(); return; }
+    var t = e.target.closest("[data-asset]");
+    if (t) { openAsset(t.getAttribute("data-asset")); }
+  });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape") { closeAsset(); return; }
+    if ((e.key === "Enter" || e.key === " ") && document.activeElement &&
+        document.activeElement.hasAttribute("data-asset")) {
+      e.preventDefault();
+      openAsset(document.activeElement.getAttribute("data-asset"));
+    }
   });
 })();
 </script>
