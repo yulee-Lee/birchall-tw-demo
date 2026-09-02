@@ -164,10 +164,11 @@ img{ max-width:100%; display:block; }
   letter-spacing:.1em; line-height:2.3;
   margin-bottom:clamp(40px,6vh,72px);
 }
+/* 中文正文:中黑字重＋大幅拉開行高,淡米底上的沉穩鋼印力道 */
 .text-col p{
-  font-size:clamp(15.5px,1.15vw,17.5px); font-weight:300;
-  line-height:2.55; letter-spacing:.08em;
-  text-align:justify; color:var(--ink-soft);
+  font-size:clamp(15.5px,1.15vw,17.5px); font-weight:500;
+  line-height:2.9; letter-spacing:.08em;
+  text-align:justify; color:#3f3a33;
   margin-bottom:clamp(34px,4.5vh,52px);
 }
 .text-col p strong{ font-weight:500; color:var(--ink); }
@@ -175,11 +176,11 @@ img{ max-width:100%; display:block; }
 .text-col p.finale{ margin-top:clamp(56px,9vh,96px); }
 /* facts 數據強調:原廠識別紅,僅限數據字眼局部使用 */
 .text-col p .fact{ color:var(--red); font-weight:500; }
-/* 英語原創金句區塊：獨立死鎖,大字/加粗斜體/深色襯線,前後呼吸空間固定 */
+/* 英語金句區塊：獨立死鎖,大字/加粗斜體/襯線,雙金句指定官方淡金 #C5A059 */
 .text-col .quote{
   font-family:var(--serif-en); font-style:italic; font-weight:600;
   font-size:clamp(23px,2vw,31px); line-height:1.85; letter-spacing:.01em;
-  color:var(--ink); text-align:left;
+  color:var(--gold); text-align:left;
   border-top:1px solid var(--gold);
   border-bottom:1px solid var(--gold);
   padding:56px 0;          /* 死鎖:金句上下內距固定 56px */
@@ -416,6 +417,9 @@ img{ max-width:100%; display:block; }
 
     <p class="lede">英國不產茶。大英茶文化的底牌，從來不是倫敦地標與皇家蕾絲邊的地理 Cliché，而是開疆闢土的全球供應鏈選品大腦（Master Blending）。</p>
 
+    <!-- 金句一・1872 歷史（觸發節點 A:圖一淡入,陪讀雙金句與傳承正文） -->
+    <p class="quote" id="quote-1872">Birchall planted his first tea bushes in early spring of 1872.</p>
+
     <p>故事的起點在 <strong id="node-a">1872 年</strong>。當時正值維多利亞女王統治時期，印度是大英帝國皇冠上的明珠。Captain Birchall George Graham 在陸軍「威靈頓公爵軍團」服役長達 <span class="fact">18 年</span>，長年駐守印度。返回英國後，他<strong>變賣了自己的軍職（sold his commission）</strong>以換取全部積蓄。隨後，他重返印度，攜手兄弟 Robert Fuller Graham 前往喜馬拉雅山腳下的大吉嶺，親手種下了第一株茶樹。</p>
 
     <!-- 行動版分鏡・節點 A -->
@@ -440,9 +444,9 @@ img{ max-width:100%; display:block; }
       <figcaption>圖三 · 上尉老年肖像<span class="src">He lived out his days in Darjeeling</span></figcaption>
     </figure>
 
-    <p class="finale">這個家族的五代傳承，團隊核心架構便正式走過了一個半世紀的時間與世界版圖，只為尋找真正值得留下的一片茶葉。這裡沒有任何流於形式的故事包裝與行銷情懷，只有一個家族在 <span class="fact">150 年</span>的時間旅程裡，每一天、每一道工序都在執行的理性品控鐵律。這套跨越三個世紀的控制鏈，<strong id="node-c">在產地直接匹配強大的資本採購權（Buying Power）</strong>，在一年年中最正確的季節中斷點買斷頂級茶青。我們在茶園現場即刻進行新鮮封鎖與船運，在速度與原始生命力上領先市場，將剛完成乾燥時最原始、鮮甜、且毫無衰敗苦澀的茶湯實相完美鎖定。這是 Birchall 橫甩同業幾條街的血統底氣。我們平視市場，不自證，不解釋。事實就擺在這裡。</p>
+    <p class="finale">這個家族的五代傳承，團隊核心架構便正式走過了一個半世紀的時間與世界版圖，只為尋找真正值得留下的一片茶葉。這裡沒有任何流於形式的故事包裝與行銷情懷，只有一個家族在 <span class="fact">150 年</span>的時間旅程裡，每一天、每一道工序都在執行的理性品控鐵律。這套跨越三個世紀的控制鏈，<strong id="node-c">在產地直接匹配強大的資本採購權（Buying Power）</strong>，在一年年中最正確的季節中斷點買斷頂級茶青。</p>
 
-    <!-- 行動版分鏡・節點 C（跨章節關係型調用） -->
+    <!-- 行動版分鏡・節點 C（跨章節關係型調用）:置於 Buying Power 語句後,與桌機分鏡因果一體 -->
     <figure class="m-figure" data-asset="04-01">
       <picture>
         <source media="(min-width:600px)" srcset="img/fig4-shipping-cases-wide-1400.webp" type="image/webp">
@@ -451,6 +455,8 @@ img{ max-width:100%; display:block; }
       </picture>
       <figcaption>原廠工業級運輸外箱 · 產地直運<span class="src">調用自【04. 實業主權】章節資產</span></figcaption>
     </figure>
+
+    <p>我們在茶園現場即刻進行新鮮封鎖與船運，在速度與原始生命力上領先市場，將剛完成乾燥時最原始、鮮甜、且毫無衰敗苦澀的茶湯實相完美鎖定。這是 Birchall 橫甩同業幾條街的血統底氣。我們平視市場，不自證，不解釋。事實就擺在這裡。</p>
 
     <!-- 潛伏幽靈組件：精確對齊文字欄左緣,Facts 鋼印完整長文渲染;點擊=調用「英國製造」資產 -->
     <div class="ghost-make" data-asset="uk-made" role="button" tabindex="0" aria-label="檢視品牌資產:英國製造">
@@ -631,9 +637,9 @@ var ASSET_REGISTRY = {
   /* 節點對位：右欄文字捲動至指定字眼 → 左欄精準遞補。
      各節點獨立觸發線：B 提早、C 延後，確保圖三有足夠停留區間 */
   var NODES = [
-    { trigger: "#node-a", asset: "01-01", prev: null,    start: "top 72%" },  /* 1872 服役與變賣軍職 */
-    { trigger: "#node-b", asset: "01-03", prev: "01-01", start: "top 82%" },  /* 長眠大吉嶺 */
-    { trigger: "#node-c", asset: "04-01", prev: "01-03", start: "top 45%" }   /* Buying Power → 跨章節調用 */
+    { trigger: "#quote-1872", asset: "01-01", prev: null,    start: "top 76%" },  /* 金句一:1872 歷史 → 圖一淡入,陪讀雙金句與傳承正文 */
+    { trigger: "#node-b",     asset: "01-03", prev: "01-01", start: "top 82%" },  /* 長眠大吉嶺 */
+    { trigger: "#node-c",     asset: "04-01", prev: "01-03", start: "top 45%" }   /* Buying Power → 跨章節調用 */
   ];
   NODES.forEach(function (n) {
     ScrollTrigger.create({
