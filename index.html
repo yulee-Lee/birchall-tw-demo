@@ -7,8 +7,8 @@
 <title>01. 傲骨世家 The Heritage — GB BIRCHALL TAIWAN 前端技術驗證</title>
 <meta name="description" content="GB Birchall Taiwan 官方網站【01. 傲骨世家】內頁雙欄矩陣：sticky 分鏡視窗、滾動節點 crossfade、跨章節關係型調用之前端技術驗證。">
 
-<!-- 分鏡影像預載：三張分鏡於文件解析階段即開始下載，杜絕淡入露白屏 -->
-<link rel="preload" as="image" href="img/fig1-captain-uniform-1200.webp" type="image/webp">
+<!-- 分鏡影像預載：三張分鏡於文件解析階段即開始下載，首張分鏡最高優先權，杜絕淡入露白屏 -->
+<link rel="preload" as="image" href="img/fig1-captain-uniform-1200.webp" type="image/webp" fetchpriority="high">
 <link rel="preload" as="image" href="img/fig3-captain-elder-1200.webp" type="image/webp">
 <link rel="preload" as="image" href="img/fig4-shipping-cases-1200.webp" type="image/webp">
 
@@ -140,7 +140,8 @@ img{ max-width:100%; display:block; }
   font-weight:400; color:var(--hairline); letter-spacing:.05em;
 }
 .stage .plate .tt{ font-size:13px; letter-spacing:.6em; text-indent:.6em; color:var(--muted); font-weight:300; }
-.stage.storying .plate{ opacity:0; }
+/* 字卡於影像完全淡入後才卸下:crossfade 全程有底,杜絕中段發白 */
+.stage.storying .plate{ opacity:0; transition:opacity .01s linear calc(var(--fade) + .05s); }
 /* 圖說：左下角，含跨章節調用標記 */
 .stage .caption{
   position:absolute; left:clamp(20px,2.6vw,40px); bottom:clamp(20px,3vh,36px); z-index:5;
@@ -308,6 +309,19 @@ img{ max-width:100%; display:block; }
 .asset-view .card .src{
   font-family:var(--serif-en); font-size:12px; letter-spacing:.14em; color:var(--muted);
   margin-bottom:22px;
+}
+/* Facts 數據層:同筆資料之商業數據,識別紅高光（客戶允許之數據強調） */
+.asset-view .card .stats{
+  display:flex; flex-wrap:wrap; gap:14px 40px;
+  border-top:1px solid var(--hairline);
+  padding:18px 0 20px; margin-bottom:4px;
+}
+.asset-view .card .stats .n{
+  font-family:var(--serif-en); font-size:21px; font-weight:600;
+  letter-spacing:.06em; color:var(--red); line-height:1.3;
+}
+.asset-view .card .stats .l{
+  font-size:10.5px; letter-spacing:.22em; color:var(--muted); margin-top:5px;
 }
 .asset-view .card .refs .rt{
   font-size:11px; letter-spacing:.32em; color:var(--gold); margin-bottom:12px; font-weight:500;
@@ -506,6 +520,7 @@ img{ max-width:100%; display:block; }
       <div class="aid" id="assetId"></div>
       <h3 id="assetTitle"></h3>
       <div class="src" id="assetSource"></div>
+      <div class="stats" id="assetStats"></div>
       <div class="refs">
         <div class="rt">本資產出現於 · 資產端反查</div>
         <ul id="assetRefs"></ul>
@@ -514,14 +529,13 @@ img{ max-width:100%; display:block; }
   </div>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script>
 /* ============================================================
    資產登錄表（Relational Asset Registry）
    正式站對應：品牌資產 CPT + ACF Relationship（雙向）
    本章（01）僅「引用」資產；節點 C 跨章節調用 04 章資產，
    資料由單一來源渲染 —— 一處修改、全站交叉路徑同步。
+   stats＝資產之 Facts 數據層,檢視卡依輕重層次渲染。
    ============================================================ */
 var ASSET_REGISTRY = {
   "01-01": {
@@ -531,6 +545,7 @@ var ASSET_REGISTRY = {
     source: "Duke of Wellington's Regiment",
     webp: "img/fig1-captain-uniform-1200.webp",
     jpg:  "img/fig1-captain-uniform-1200.jpg",
+    stats: [["1872", "親手種下第一株茶樹"], ["18 年", "威靈頓公爵軍團服役"]],
     usedIn: ["01. 傲骨世家 — 分鏡節點 A（主要頁面）"]
   },
   "01-03": {
@@ -540,6 +555,7 @@ var ASSET_REGISTRY = {
     source: "He lived out his days in Darjeeling",
     webp: "img/fig3-captain-elder-1200.webp",
     jpg:  "img/fig3-captain-elder-1200.jpg",
+    stats: [["五代", "家族傳承"], ["150 年", "理性品控鐵律"]],
     usedIn: ["01. 傲骨世家 — 分鏡節點 B（主要頁面）"]
   },
   "04-01": {
@@ -549,6 +565,7 @@ var ASSET_REGISTRY = {
     source: "調用自【04. 實業主權】章節資產",
     webp: "img/fig4-shipping-cases-1200.webp",
     jpg:  "img/fig4-shipping-cases-1200.jpg",
+    stats: [["產地直運", "茶園現場新鮮封鎖"], ["工廠戳記", "批次可溯"]],
     usedIn: ["04. 實業主權 — 主場資產（主要頁面）", "01. 傲骨世家 — 分鏡節點 C（跨章節調用）"]
   },
   "uk-made": {
@@ -557,10 +574,39 @@ var ASSET_REGISTRY = {
     title: "英國製造 · Made in England",
     source: "100% Made in the UK · 威爾特郡原廠調配封裝",
     stamp: true,
+    stats: [["100%", "英國調配封裝"], ["威爾特郡", "原廠完成"]],
     usedIn: ["傳承（01. 傲骨世家）— 主要頁面 · 幽靈組件", "首頁 — 摘要出現", "茶品世界 — 延伸出現"]
   }
 };
 
+/* ============================================================
+   影像解碼引擎:於文件解析階段即啟動下載＋解碼,
+   不等待動畫庫之網路載入 —— 首屏分鏡無痛渲染
+   ============================================================ */
+var SUPPORTS_WEBP = (function () {
+  var c = document.createElement("canvas");
+  return c.toDataURL && c.toDataURL("image/webp").indexOf("data:image/webp") === 0;
+})();
+var ASSET_DECODED = {};
+function preloadAsset(id) {
+  if (ASSET_DECODED[id]) { return ASSET_DECODED[id]; }
+  var a = ASSET_REGISTRY[id];
+  if (!a || a.stamp) { return Promise.resolve(null); }   /* 鋼印型資產無照片,不發請求 */
+  var img = new Image();
+  img.src = SUPPORTS_WEBP ? a.webp : a.jpg;
+  img.alt = "";
+  ASSET_DECODED[id] = (img.decode ? img.decode().catch(function(){}) : Promise.resolve())
+    .then(function () { return img; });
+  return ASSET_DECODED[id];
+}
+/* 桌機立即預解碼三張分鏡（首張優先）;行動版走原生 img,不佔頻寬 */
+if (window.matchMedia("(min-width:1024px)").matches) {
+  ["01-01", "01-03", "04-01"].forEach(preloadAsset);
+}
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
 (function () {
   "use strict";
 
@@ -578,27 +624,9 @@ var ASSET_REGISTRY = {
   var captionEl= document.getElementById("caption");
   var front    = 0;          /* 目前在最上層的圖層索引 */
   var currentId= null;       /* 目前顯示的資產 id；null = 開場字卡 */
-  var decoded  = {};         /* 已解碼影像快取 */
 
-  var supportsWebp = (function () {
-    var c = document.createElement("canvas");
-    return c.toDataURL && c.toDataURL("image/webp").indexOf("data:image/webp") === 0;
-  })();
-
-  /* 影像預載＋解碼：於任何淡入發生前完成，杜絕露白屏與跳圖 */
-  function preload(id) {
-    if (decoded[id]) { return decoded[id]; }
-    var a = ASSET_REGISTRY[id];
-    var img = new Image();
-    img.src = supportsWebp ? a.webp : a.jpg;
-    img.alt = "";
-    decoded[id] = (img.decode ? img.decode().catch(function(){}) : Promise.resolve())
-      .then(function () { return img; });
-    return decoded[id];
-  }
-  Object.keys(ASSET_REGISTRY).forEach(preload);
-
-  /* 分鏡遞補：雙圖層交替，1.5s crossfade（規格指定） */
+  /* 分鏡遞補：雙圖層交替，1.5s crossfade（規格指定）;
+     影像已於文件解析階段預解碼完成（見上方解碼引擎） */
   function show(id) {
     if (id === currentId) { return; }
     currentId = id;
@@ -611,8 +639,8 @@ var ASSET_REGISTRY = {
       return;
     }
 
-    preload(id).then(function (img) {
-      if (currentId !== id) { return; }      /* 快速滾動時僅落定於最新節點 */
+    preloadAsset(id).then(function (img) {
+      if (currentId !== id || !img) { return; }  /* 快速滾動時僅落定於最新節點 */
       var back = 1 - front;
       var host = layers[back];
       host.innerHTML = "";
@@ -695,6 +723,16 @@ var ASSET_REGISTRY = {
     idEl.textContent    = "Asset · " + id.toUpperCase();
     titleEl.textContent = a.title;
     srcEl.textContent   = a.source;
+    /* Facts 數據層:同筆登錄資料渲染,非照片放大 */
+    var statsEl = document.getElementById("assetStats");
+    statsEl.innerHTML = "";
+    (a.stats || []).forEach(function (st) {
+      var box = document.createElement("div");
+      var n = document.createElement("div"); n.className = "n"; n.textContent = st[0];
+      var l = document.createElement("div"); l.className = "l"; l.textContent = st[1];
+      box.appendChild(n); box.appendChild(l);
+      statsEl.appendChild(box);
+    });
     refsEl.innerHTML    = "";
     a.usedIn.forEach(function (u) {
       var li = document.createElement("li");
